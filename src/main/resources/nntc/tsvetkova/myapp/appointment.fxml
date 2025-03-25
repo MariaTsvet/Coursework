@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="407.0" prefWidth="622.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nntc.tsvetkova.myapp.DesktopController">
+   <children>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutY="-4.0" prefHeight="55.0" prefWidth="622.0" text="Запись" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS">
+         <font>
+            <Font name="Noto Serif Condensed Bold" size="28.0" />
+         </font>
+      </Label>
+      <HBox layoutY="50.0" prefHeight="290.0" prefWidth="622.0">
+         <children>
+            <VBox alignment="CENTER" prefHeight="400.0" prefWidth="162.0">
+               <children>
+                  <Button mnemonicParsing="false" prefHeight="46.0" prefWidth="162.0" text="Клиент" />
+                  <TextArea prefHeight="32.0" prefWidth="142.0" />
+                  <Button mnemonicParsing="false" prefHeight="46.0" prefWidth="162.0" text="Услуги" />
+                  <TextArea prefHeight="32.0" prefWidth="142.0" />
+                  <Button mnemonicParsing="false" prefHeight="46.0" prefWidth="162.0" text="Мастер" />
+                  <TextArea prefHeight="32.0" prefWidth="142.0" />
+                  <Button mnemonicParsing="false" prefHeight="46.0" prefWidth="162.0" text="Время" />
+                  <TextArea prefHeight="32.0" prefWidth="142.0" />
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </VBox>
+            <TableView prefHeight="290.0" prefWidth="458.0">
+              <columns>
+                <TableColumn prefWidth="175.20001828670502" text="Услуга" />
+                <TableColumn prefWidth="75.199951171875" text="Клиент" />
+                  <TableColumn prefWidth="107.20001220703125" text="Мастер" />
+                  <TableColumn prefWidth="89.5999755859375" text="Время" />
+              </columns>
+            </TableView>
+         </children>
+      </HBox>
+      <Button layoutX="14.0" layoutY="365.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="103.0" text="Обновить" />
+      <Button layoutX="140.0" layoutY="365.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="103.0" text="Изменить" />
+      <Button layoutX="490.0" layoutY="365.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="103.0" text="Удалить" textFill="#ea1313" />
+      <DatePicker fx:id="datePic" layoutX="276.0" layoutY="365.0" onAction="#onDateSelected" />
+   </children>
+</AnchorPane>
