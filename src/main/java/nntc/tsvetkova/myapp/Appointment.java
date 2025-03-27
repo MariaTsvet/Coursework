@@ -4,20 +4,20 @@ public class Appointment {
     private int id;
     private String time;
     private String date;
-    private int worker;
-    private int client;
-    private int service;
-    private int storage;
+    private String worker;
+    private String client;
+    private String service;
+    //private String storage;
 
 
-    public Appointment(int id, String time, String date, int worker, int client, int service, int storage) {
+    public Appointment(int id, String time, String date, String worker, String client, String service) {
         this.id = id;
         this.time = time;
         this.date = date;
         this.worker = worker;
         this.client = client;
         this.service = service;
-        this.storage = storage;
+       // this.storage = storage;
     }
 
     public int getId() {
@@ -32,19 +32,19 @@ public class Appointment {
         return date;
     }
 
-    public int getClient() {
+    public String getClient() {
         return client;
     }
 
-    public int getWorker() {
+    public String getWorker() {
         return worker;
     }
 
-    public int getService() {
+    public String getService() {
         return service;
     }
 
-    public int getStorage() {
-        return storage;
-    }
+    //public String getStorage() {
+       // return storage;
+   // }
 }

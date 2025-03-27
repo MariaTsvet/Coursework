@@ -2,53 +2,62 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="407.0" prefWidth="622.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nntc.tsvetkova.myapp.DesktopController">
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nntc.tsvetkova.myapp.AppointmentController">
    <children>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutY="-4.0" prefHeight="55.0" prefWidth="622.0" text="Запись" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS">
-         <font>
-            <Font name="Noto Serif Condensed Bold" size="28.0" />
-         </font>
-      </Label>
-      <HBox layoutY="50.0" prefHeight="290.0" prefWidth="622.0">
+      <AnchorPane prefHeight="494.0" prefWidth="722.0">
          <children>
-            <VBox alignment="CENTER" prefHeight="400.0" prefWidth="162.0">
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="-10.0" prefHeight="55.0" prefWidth="715.0" text="Запись" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS">
+               <font>
+                  <Font name="Noto Serif Condensed Bold" size="28.0" />
+               </font>
+            </Label>
+            <HBox layoutY="50.0" prefHeight="361.0" prefWidth="722.0">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="46.0" prefWidth="162.0" text="Клиент" />
-                  <TextArea prefHeight="32.0" prefWidth="142.0" />
-                  <Button mnemonicParsing="false" prefHeight="46.0" prefWidth="162.0" text="Услуги" />
-                  <TextArea prefHeight="32.0" prefWidth="142.0" />
-                  <Button mnemonicParsing="false" prefHeight="46.0" prefWidth="162.0" text="Мастер" />
-                  <TextArea prefHeight="32.0" prefWidth="142.0" />
-                  <Button mnemonicParsing="false" prefHeight="46.0" prefWidth="162.0" text="Время" />
-                  <TextArea prefHeight="32.0" prefWidth="142.0" />
+                  <VBox alignment="CENTER" prefHeight="400.0" prefWidth="162.0">
+                     <children>
+                        <Label text="Id" />
+                        <TextField fx:id="fieldAppointmentId" prefHeight="32.0" prefWidth="142.0" />
+                        <Label text="Услуга" />
+                        <TextField fx:id="fieldService" prefHeight="32.0" prefWidth="142.0" />
+                        <Label text="Клиент" />
+                        <TextField fx:id="fieldClient" prefHeight="32.0" prefWidth="142.0" />
+                        <Label text="Мастер" />
+                        <TextField fx:id="fieldMasterName" prefHeight="32.0" prefWidth="142.0" />
+                        <Label text="Дата" />
+                        <TextField fx:id="fieldDate" prefHeight="32.0" prefWidth="142.0" />
+                        <Label text="Время" />
+                        <TextField fx:id="fieldTime" prefHeight="32.0" prefWidth="142.0" />
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </VBox>
+                  <TableView prefHeight="290.0" fx:id="tableView" onMouseClicked="#onRowClick" prefWidth="541.0">
+                    <columns>
+                        <TableColumn fx:id="idAppointment" prefWidth="44.000059485435486" text="Id" />
+                        <TableColumn fx:id="serviceName" prefWidth="141.59998321533203" text="Услуга" />
+                        <TableColumn fx:id="clientnameColumn" prefWidth="96.79998779296875" text="Клиент" />
+                        <TableColumn fx:id="masternameColumn" prefWidth="119.19998168945312" text="Мастер" />
+                        <TableColumn fx:id="dateColumn" prefWidth="70.4000244140625" text="Дата" />
+                        <TableColumn fx:id="timeColumn" prefWidth="68.00003051757812" text="Время" />
+                    </columns>
+                  </TableView>
                </children>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </VBox>
-            <TableView prefHeight="290.0" prefWidth="458.0">
-              <columns>
-                <TableColumn prefWidth="175.20001828670502" text="Услуга" />
-                <TableColumn prefWidth="75.199951171875" text="Клиент" />
-                  <TableColumn prefWidth="107.20001220703125" text="Мастер" />
-                  <TableColumn prefWidth="89.5999755859375" text="Время" />
-              </columns>
-            </TableView>
+            </HBox>
+            <Button layoutX="14.0" layoutY="445.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="103.0" onAction="#updateTable" text="Обновить" />
+            <Button layoutX="257.0" layoutY="445.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="103.0" onAction="#addRow" text="Добавить" />
+            <Button layoutX="582.0" layoutY="445.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="103.0" fx:id="btnDelete" style="-fx-background-color: red; -fx-text-fill: white;" onAction="#deleteRow" text="Удалить" textFill="#ea1313" />
+            <Button layoutX="372.0" layoutY="445.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="103.0" fx:id="btnEdit" onAction="#editRow"  text="Изменить" />
          </children>
-      </HBox>
-      <Button layoutX="14.0" layoutY="365.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="103.0" text="Обновить" />
-      <Button layoutX="140.0" layoutY="365.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="103.0" text="Изменить" />
-      <Button layoutX="490.0" layoutY="365.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="103.0" text="Удалить" textFill="#ea1313" />
-      <DatePicker fx:id="datePic" layoutX="276.0" layoutY="365.0" onAction="#onDateSelected" />
+      </AnchorPane>
    </children>
-</AnchorPane>
+</VBox>

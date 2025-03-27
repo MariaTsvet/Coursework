@@ -147,33 +147,6 @@ public class DesktopController {
             dialog.showAndWait();
     }
 
-//    public void showAppointmentWindow(ActionEvent actionEvent) throws IOException {
-//        // Загружаем FXML файл для окна справки
-//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("appointment.fxml"));
-//
-//        AnchorPane infoContent = fxmlLoader.load(); // Загружаем содержимое окна справки
-//
-//        AppointmentController controller = fxmlLoader.getController();
-//        controller.setPrimaryDatabaseManager(primaryDatabaseManager);
-//
-//        // Создаем диалоговое окно
-//        Dialog<Void> dialog = new Dialog<>();
-//        dialog.setTitle("Управление заказами");
-//
-//        dialog.getDialogPane().setContent(infoContent); // Добавляем содержимое в диалоговое окно
-//
-//        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
-//        stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
-//
-//        // Обработчик закрытия окна
-//        stage.setOnCloseRequest(event -> {
-//            System.out.println("Закрытие окна с заказами...");
-//            dialog.close(); // Закрыть диалог
-//        });
-//
-//        // Показываем диалог в модальном режиме
-//        dialog.showAndWait();
-//    }
 
     public void showCustomersWindow(ActionEvent actionEvent) throws IOException {
         // Загружаем FXML файл для окна справки
@@ -228,6 +201,33 @@ public class DesktopController {
         });
 
         // Показываем диалог в модальном режиме
+        dialog.showAndWait();
+    }
+
+    public void showAppointmentWindow(ActionEvent actionEvent) throws IOException {
+        // Загружаем FXML файл для окна справки
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("appointment.fxml"));
+
+        VBox infoContent = fxmlLoader.load(); // Загружаем содержимое окна справки
+
+        AppointmentController controller = fxmlLoader.getController();
+        controller.setPrimaryDatabaseManager(primaryDatabaseManager);
+
+        // Создаем диалоговое окно
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("Управление записями");
+
+        dialog.getDialogPane().setContent(infoContent);
+
+        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
+
+        // Обработчик закрытия окна
+        stage.setOnCloseRequest(event -> {
+            System.out.println("Закрытие окна с покупателями...");
+            dialog.close();
+        });
+
         dialog.showAndWait();
     }
 

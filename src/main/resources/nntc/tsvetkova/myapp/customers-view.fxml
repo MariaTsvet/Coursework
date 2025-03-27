@@ -24,7 +24,7 @@
         <columns>
             <TableColumn fx:id="idColumn" text="ID" />
             <TableColumn fx:id="nameColumn" text="Имя" />
-            <TableColumn fx:id="emailColumn" text="Электропочта" />
+            <TableColumn fx:id="emailColumn" text="Email" />
         </columns>
     </TableView>
 
@@ -40,7 +40,7 @@
             <TextField fx:id="fieldID" />
             <Label text="Имя:" />
             <TextField fx:id="fieldName" />
-            <Label text="Электропочта:" />
+            <Label text="Email:" />
             <TextField fx:id="fieldEmail" />
             <Button mnemonicParsing="false" onAction="#addRow" text="Добавить" />
             <Button fx:id="btnEdit" mnemonicParsing="false" onAction="#editRow" text="Изменить" />

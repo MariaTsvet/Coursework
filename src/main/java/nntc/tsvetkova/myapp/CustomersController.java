@@ -21,16 +21,13 @@ public class CustomersController {
 
     @FXML
     public TextField fieldID;
-
     @FXML
     public TextField fieldName;
-
     @FXML
     public TextField fieldEmail;
 
     @FXML
     public Button btnEdit;
-
     @FXML
     public Button btnDelete;
 

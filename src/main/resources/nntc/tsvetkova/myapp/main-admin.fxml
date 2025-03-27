@@ -19,7 +19,7 @@
     </padding>
    <MenuBar>
       <menus>
-         <Menu mnemonicParsing="true" onAction="#showLoginWindow" text="Меню">
+         <Menu mnemonicParsing="true" text="Меню">
             <items>
                <MenuItem accelerator="Ctrl+P" mnemonicParsing="true" onAction="#showLoginWindow" text="_Подключение к СУБД" />
                <MenuItem accelerator="Ctrl+I" mnemonicParsing="true" onAction="#showinfoWindow" text="_Справка" />
@@ -43,7 +43,7 @@
                <TableColumn prefWidth="79.19998168945312" text="Время" />
            </columns>
          </TableView>
-         <Button layoutX="14.0" mnemonicParsing="false"  prefHeight="94.0" prefWidth="174.0" text="Новая запись">
+         <Button layoutX="14.0" mnemonicParsing="false" onAction="#showAppointmentWindow" prefHeight="94.0" prefWidth="174.0" text="Новая запись">
             <font>
                <Font name="Noto Serif Condensed" size="20.0" />
             </font>

@@ -58,7 +58,7 @@ public class DesktopApplication extends Application {
         dbManager.connect();
         dbManager.ensureTablesExists();
 
-        FXMLLoader fxmlLoader = new FXMLLoader(DesktopApplication.class.getResource("appointment.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(DesktopApplication.class.getResource("main-admin.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 340, 280);
 
 

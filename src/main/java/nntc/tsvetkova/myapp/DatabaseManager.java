@@ -70,13 +70,14 @@ public class DatabaseManager {
                     	CONSTRAINT service_pk PRIMARY KEY (id)
                     );
                 
-                    CREATE TABLE IF NOT EXISTS %s."storage" (
+                    CREATE TABLE IF NOT EXISTS %s.products (
                     	id int GENERATED ALWAYS AS IDENTITY NOT NULL,
                     	"name" varchar NULL,
                     	price float4 NULL,
                     	quantity int NULL,
                     	description varchar NULL,
-                    	CONSTRAINT storage_pk PRIMARY KEY (id)
+                    	image_data bytea NULL,
+                    	CONSTRAINT products_pk PRIMARY KEY (id)
                     );
                 
                     CREATE TABLE IF NOT EXISTS %s.worker (
@@ -95,29 +96,39 @@ public class DatabaseManager {
                     	CONSTRAINT admin_unique UNIQUE (email)
                     );
                 
-                    CREATE TABLE IF NOT EXISTS %s.client (
+                    CREATE TABLE IF NOT EXISTS %s.customers (
                     	id int GENERATED ALWAYS AS IDENTITY NOT NULL,
                     	"name" varchar NULL,
                     	email varchar NULL,
-                    	CONSTRAINT client_pk PRIMARY KEY (id),
-                    	CONSTRAINT client_unique UNIQUE (email)
+                    	CONSTRAINT customers_pk PRIMARY KEY (id),
+                    	CONSTRAINT customers_unique UNIQUE (email)
                     );
+                
+                    CREATE TABLE IF NOT EXISTS %s.users (
+                    	id int GENERATED ALWAYS AS IDENTITY NOT NULL,
+                    	"admin" int NULL,
+                    	customers int NULL,
+                    	CONSTRAINT users_pk PRIMARY KEY (id),
+                    	CONSTRAINT users_customers_fk FOREIGN KEY (customers) REFERENCES %s.customers(id),
+                        CONSTRAINT users_admin_fk FOREIGN KEY ("admin") REFERENCES %s."admin"(id)
+                    );
+                
                 
                     CREATE TABLE IF NOT EXISTS %s.appointment (
                     	id int4 GENERATED ALWAYS AS IDENTITY NOT NULL,
-                    	"time" time NOT NULL,
-                    	"date" date NOT NULL,
+                    	"time" varchar NOT NULL,
+                    	"date" varchar NOT NULL,
                     	worker int4 NULL,
-                    	client int4 NULL,
+                    	customers int4 NULL,
                     	service int4 NULL,
-                    	"storage" int4 NULL,
+                    	products int4 NULL,
                     	CONSTRAINT appointment_pk PRIMARY KEY (id),
-                    	CONSTRAINT appointment_client_fk FOREIGN KEY (client) REFERENCES %s.client(id),
+                    	CONSTRAINT appointment_customers_fk FOREIGN KEY (customers) REFERENCES %s.customers(id),
                     	CONSTRAINT appointment_service_fk FOREIGN KEY (service) REFERENCES %s.service(id) ON DELETE RESTRICT,
-                    	CONSTRAINT appointment_storage_fk FOREIGN KEY ("storage") REFERENCES %s."storage"(id) ON DELETE SET NULL,
+                    	CONSTRAINT appointment_storage_fk FOREIGN KEY (products) REFERENCES %s.products(id) ON DELETE SET NULL,
                     	CONSTRAINT appointment_worker_fk FOREIGN KEY (worker) REFERENCES %s.worker(id) ON DELETE SET NULL
                     );
-                """, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA);
+                """, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA);
 
 //        String dmlQueries = String.format("""
 //                    INSERT INTO %s.service ("name", description) VALUES\s
@@ -291,7 +302,7 @@ public class DatabaseManager {
     }
 
     public void workerInsertData(String name, String email) {
-        String query = String.format("INSERT INTO %s (name, email) VALUES ('%s', %s)", SCHEMA.concat(".worker"), name, email);
+        String query = String.format("INSERT INTO %s (name, email) VALUES ('%s', '%s')", SCHEMA.concat(".worker"), name, email);
         try (var preparedStatement = connection.prepareStatement(query)) {
             int rowsInserted = preparedStatement.executeUpdate();
             System.out.println("Добавлено строк: " + rowsInserted);
@@ -390,16 +401,27 @@ public class DatabaseManager {
         return new Image(Objects.requireNonNull(defaultImageStream));
     }
 
-    public ObservableList<Worker> appointmentFetchData() {
+    public ObservableList<Appointment> appointmentFetchData() {
 
-        ObservableList<Worker> re = FXCollections.observableArrayList();
-        String query = String.format("SELECT id, name, email FROM %s", SCHEMA.concat(".worker"));
+        ObservableList<Appointment> re = FXCollections.observableArrayList();
+        String query = String.format("SELECT appointment.id AS id, service.name AS service, " +
+                        "worker.name AS worker, " +
+                        "customers.name AS customers, " +
+                        "appointment.time, " +
+                        "appointment.date " +
+                        "FROM %s.appointment " +
+                        "JOIN %s.worker ON appointment.worker = worker.id " +
+                        "JOIN %s.customers ON appointment.customers = customers.id " +
+                        "JOIN %s.service ON appointment.service = service.id;",
+                SCHEMA, SCHEMA, SCHEMA, SCHEMA);
 
         try (var preparedStatement = connection.prepareStatement(query);
              var resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
-                re.add(new Worker(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getString("email")));
+                re.add(new Appointment(resultSet.getInt("id"), resultSet.getString("service"),
+                        resultSet.getString("customers"), resultSet.getString("worker"),
+                        resultSet.getString("date"), resultSet.getString("time")));
             }
 
         } catch (SQLException e) {
@@ -408,6 +430,47 @@ public class DatabaseManager {
             Platform.runLater(() -> ErrorDialog.showError("Ошибка при выполнении запроса: ", e.getMessage()));
         }
         return re;
+    }
+
+    public void appointmentInsertData(String service, String client, String master, String date, String time) {
+        String query = String.format("INSERT INTO %s (service, customers, worker, date, time) VALUES (%s, %s, %s, %s, %s)", SCHEMA.concat(".appointment"), service, client, master, date, time);
+        try (var preparedStatement = connection.prepareStatement(query)) {
+            int rowsInserted = preparedStatement.executeUpdate();
+            System.out.println("Добавлено строк: " + rowsInserted);
+        } catch (SQLException e) {
+            System.out.println("Ошибка при вставке данных: " + e.getMessage());
+            // Показываем модальное окно с ошибкой
+            Platform.runLater(() -> ErrorDialog.showError("Ошибка при вставке данных: ", e.getMessage()));
+        }
+    }
+
+    public void appointmentUpdateData(String client, String service, String master, String date, String time, Integer id) {
+        String query = String.format("UPDATE %s SET client=%s, service=%s, master=%s, date=%s, time=%s WHERE id=%d", SCHEMA.concat(".appointment"), client, service, master, date, time, id);
+
+        System.out.println("QUERY:");
+        System.out.println(query);
+
+        try (var preparedStatement = connection.prepareStatement(query)) {
+            int rowsUpdated = preparedStatement.executeUpdate();
+            System.out.println("Обновлено строк: " + rowsUpdated);
+        } catch (SQLException e) {
+            System.out.println("Ошибка при изменении данных: " + e.getMessage());
+            // Показываем модальное окно с ошибкой
+            Platform.runLater(() -> ErrorDialog.showError("Ошибка при изменении данных: ", e.getMessage()));
+        }
+    }
+
+    public void appointmentDeleteData(int id) {
+        String query = String.format("DELETE FROM %s WHERE id=%d", SCHEMA.concat(".appointment"), id);
+
+        try (var preparedStatement = connection.prepareStatement(query)) {
+            int rowsDeleted = preparedStatement.executeUpdate();
+            System.out.println("Удалено строк: " + rowsDeleted);
+        } catch (SQLException e) {
+            System.out.println("Ошибка при удалении данных: " + e.getMessage());
+            // Показываем модальное окно с ошибкой
+            Platform.runLater(() -> ErrorDialog.showError("Ошибка при удалении данных: ", e.getMessage()));
+        }
     }
 
 }
