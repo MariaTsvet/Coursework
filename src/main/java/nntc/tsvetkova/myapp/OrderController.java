@@ -67,7 +67,7 @@ public class OrderController {
             }
             orderId.setText(String.format("%d", orderById.getId()));
             orderDate.setText(orderById.getDate());
-            feelCustomersList(orderById != null ? orderById.getCustomerId() : 0);
+            feelCustomersList(orderById != null ? orderById.getUserId() : 0);
         });
 
     }

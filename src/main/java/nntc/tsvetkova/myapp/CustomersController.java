@@ -11,13 +11,13 @@ import java.util.Optional;
 
 public class CustomersController {
     @FXML
-    private TableView<Customer> tableView;
+    private TableView<User> tableView;
     @FXML
-    private TableColumn<Customer, Integer> idColumn;
+    private TableColumn<User, Integer> idColumn;
     @FXML
-    private TableColumn<Customer, String> nameColumn;
+    private TableColumn<User, String> nameColumn;
     @FXML
-    private TableColumn<Customer, String> emailColumn;
+    private TableColumn<User, String> emailColumn;
 
     @FXML
     public TextField fieldID;
@@ -55,10 +55,10 @@ public class CustomersController {
 
     @FXML
     public void updateTable() {
-        ObservableList<Customer> data = primaryDatabaseManager.customersFetchData();
-        idColumn.setCellValueFactory(new PropertyValueFactory<Customer, Integer>("id"));
-        nameColumn.setCellValueFactory(new PropertyValueFactory<Customer, String>("name"));
-        emailColumn.setCellValueFactory(new PropertyValueFactory<Customer, String>("email"));
+        ObservableList<User> data = primaryDatabaseManager.customersFetchData();
+        idColumn.setCellValueFactory(new PropertyValueFactory<User, Integer>("id"));
+        nameColumn.setCellValueFactory(new PropertyValueFactory<User, String>("name"));
+        emailColumn.setCellValueFactory(new PropertyValueFactory<User, String>("email"));
         tableView.setItems(data);
     }
 
@@ -95,7 +95,7 @@ public class CustomersController {
     @FXML
     private void onRowClick(MouseEvent event) {
         if (event.getClickCount() == 1) {  // Обработка одиночного клика
-            Customer selectedCustomer = tableView.getSelectionModel().getSelectedItem();
+            User selectedCustomer = tableView.getSelectionModel().getSelectedItem();
             if (selectedCustomer != null) {
                 fieldID.setText(String.format("%d", selectedCustomer.getId()));
                 fieldName.setText(selectedCustomer.getName());

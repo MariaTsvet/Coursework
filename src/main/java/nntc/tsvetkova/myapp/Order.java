@@ -4,11 +4,11 @@ public class Order {
     private int id;
     private String date;
     private String time;
-    private String customer;
     private String worker;
+    private String user;
     private String service;
     private String products;
-    public int customerId;
+    public int userId;
     public int workerId;
     public int serviceId;
     public int productsId;
@@ -17,15 +17,15 @@ public class Order {
     public Order(int id, String date, String customer, String time, String worker, String service, String products) {
         this.id = id;
         this.date = date;
-        this.customer = customer;
+        this.user = user;
         this.time = time;
         this.worker = worker;
         this.service = service;
         this.products = products;
     }
 
-    public void setCustomer(int customerId) {
-        this.customerId = customerId;
+    public void setUser(int userId) {
+        this.userId = userId;
     }
     public void setWorker(int workerId) {
         this.workerId = workerId;
@@ -42,8 +42,8 @@ public class Order {
         return id;
     }
 
-    public int getCustomerId(){
-        return customerId;
+    public int getUserId(){
+        return userId;
     }
 
     public String getDate() {

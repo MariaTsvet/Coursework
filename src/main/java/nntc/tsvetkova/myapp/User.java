@@ -1,17 +1,19 @@
 package nntc.tsvetkova.myapp;
 
-public class Customer {
+public class User {
     private int id;
     private String name;
     private String email;
     private String password;
+    private String role;
 
 
-    public Customer(int id, String name, String email, String password) {
+    public User(int id, String name, String email, String password, String role) {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.password = this.password;
+        this.password = password;
+        this.role = role;
     }
 
     public int getId() {
@@ -29,5 +31,10 @@ public class Customer {
     public String getPassword() {
         return password;
     }
+
+    public String getRole() {
+        return role;
+    }
+
 
 }

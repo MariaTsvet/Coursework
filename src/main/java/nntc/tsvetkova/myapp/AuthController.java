@@ -7,6 +7,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.prefs.Preferences;
 
@@ -18,14 +19,17 @@ public class AuthController {
     private TextField loginEmailField;
     @FXML
     private PasswordField loginPasswordField;
+    @FXML
+    private ComboBox<String> loginRoleComboBox;
 
     @FXML
     private TextField registerNameField;
     @FXML
     private TextField registerEmailField;
-
     @FXML
     private PasswordField registerPasswordField;
+    @FXML
+    private ComboBox<String> registerRoleComboBox;
 
     private DatabaseManager databaseManager;
     private DesktopController desktopController;
@@ -39,6 +43,14 @@ public class AuthController {
 
     public void setPrimaryDatabaseManager(DatabaseManager dm) {
         this.primaryDatabaseManager = dm;
+    }
+
+    public void setDatabaseManager(DatabaseManager dm) {
+        this.databaseManager = dm;
+    }
+
+    public void setDesktopController(DesktopController dc) {
+        this.desktopController = dc;
     }
 
     public void handleMenuClose(ActionEvent event) {
@@ -91,40 +103,36 @@ public class AuthController {
         String name = loginNameField.getText().trim();
         String password = loginPasswordField.getText().trim();
         String email = loginEmailField.getText().trim();
+        String role = loginRoleComboBox.getValue();
 
-        Customer authenticatedCustomer = databaseManager.authenticateCustomer(name, email, password);
-        Admin authenticatedAdmin = databaseManager.authenticateAdmin(name, email, password);
+        User authenticatedUser = databaseManager.authenticateCustomer(name, email, password, role);
 
-        if (authenticatedCustomer != null) {
-            ((Stage) loginNameField.getScene().getWindow()).close();
-            desktopController.showMainCustomerWindow();
-        } else {
+        if (authenticatedUser != null) {
+            ((Stage) loginNameField.getScene().getWindow()).close(); // Закрыть окно аутентификации
 
-            if (authenticatedAdmin != null) {
-                ((Stage) loginNameField.getScene().getWindow()).close();
+            if ("admin".equals(authenticatedUser.getRole())) {
                 desktopController.showMainAdminWindow();
-            } else {
-                // Если ни клиент, ни администратор не найдены
-                showAlert("Ошибка авторизации", "Неверные данные."); // Ошибка при аутентификации
+            } else if ("client".equals(authenticatedUser.getRole())) {
+                desktopController.showMainCustomerWindow();
             }
+        } else {
+            showAlert("Ошибка авторизации", "Неверные данные.");
         }
     }
 
-
-
-
     @FXML
     private void handleRegistration() {
-        String username = registerNameField.getText();
+        String name = registerNameField.getText();
         String email = registerEmailField.getText();
         String password = registerPasswordField.getText();
+        String role = registerRoleComboBox.getValue();
 
-        if (username.isEmpty() | email.isEmpty() | password.isEmpty()) {
+        if (name.isEmpty() | email.isEmpty() | password.isEmpty() | Objects.isNull(role)) {
             showAlert("Ошибка", "Все поля должны быть заполнены.");
             return;
         }
 
-        boolean isRegistered = databaseManager.registerUser(username, email, password);
+        boolean isRegistered = databaseManager.registerUser(name, email, password, role);
 
         if (isRegistered) {
             showAlert("Успех", "Регистрация прошла успешно! Теперь вы можете войти.");
