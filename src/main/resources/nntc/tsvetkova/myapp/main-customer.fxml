@@ -42,7 +42,7 @@
                <TableColumn prefWidth="68.800048828125" text="Время" />
            </columns>
          </TableView>
-         <Button layoutX="14.0" mnemonicParsing="false" onAction="#showAppointmentWindow" prefHeight="94.0" prefWidth="262.0" text="Новая запись">
+         <Button layoutX="14.0" mnemonicParsing="false" onAction="#showOrderWindow" prefHeight="94.0" prefWidth="262.0" text="Новая запись">
             <font>
                <Font name="Noto Serif Condensed" size="30.0" />
             </font>

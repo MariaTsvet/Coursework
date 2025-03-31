@@ -1,11 +1,8 @@
 package nntc.tsvetkova.myapp;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.DatePicker;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Dialog;
@@ -15,9 +12,6 @@ import java.util.prefs.Preferences;
 import javafx.scene.image.Image;
 
 public class DesktopController {
-
-    @FXML
-    public DatePicker datePic;
 
     private Stage primaryStage; // Ссылка на главное окно
     private DatabaseManager primaryDatabaseManager; // Ссылка на главное окно
@@ -118,35 +112,29 @@ public class DesktopController {
         dialog.showAndWait();
     }
 
-    public void showProductsWindow(ActionEvent actionEvent) throws IOException {
-            // Загружаем FXML файл для окна справки
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("products-view.fxml"));
+    public void showOrderWindow(ActionEvent actionEvent) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("order-view.fxml"));
 
-            VBox infoContent = fxmlLoader.load(); // Загружаем содержимое окна справки
+        VBox infoContent = fxmlLoader.load();
 
-            ProductsController controller = fxmlLoader.getController();
-            controller.setPrimaryDatabaseManager(primaryDatabaseManager);
+        OrderController controller = fxmlLoader.getController();
+        controller.setPrimaryDatabaseManager(primaryDatabaseManager);
 
-            // Создаем диалоговое окно
-            Dialog<Void> dialog = new Dialog<>();
-            dialog.setTitle("Управление товарами");
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("Управление записями");
 
-            dialog.getDialogPane().setContent(infoContent); // Добавляем содержимое в диалоговое окно
+        dialog.getDialogPane().setContent(infoContent);
 
-            Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
-            stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
+        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
 
+        stage.setOnCloseRequest(event -> {
+            System.out.println("Закрытие окна с покупателями...");
+            dialog.close();
+        });
 
-            // Обработчик закрытия окна
-            stage.setOnCloseRequest(event -> {
-                System.out.println("Закрытие окна с товарами...");
-                dialog.close(); // Закрыть диалог
-            });
-
-            // Показываем диалог в модальном режиме
-            dialog.showAndWait();
+        dialog.showAndWait();
     }
-
 
     public void showCustomersWindow(ActionEvent actionEvent) throws IOException {
         // Загружаем FXML файл для окна справки
@@ -176,63 +164,98 @@ public class DesktopController {
         dialog.showAndWait();
     }
 
-    public void showWorkersWindow(ActionEvent actionEvent) throws IOException {
+    public void showProductsWindow(ActionEvent actionEvent) throws IOException {
         // Загружаем FXML файл для окна справки
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("workers.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("products-view.fxml"));
 
         VBox infoContent = fxmlLoader.load(); // Загружаем содержимое окна справки
 
-        WorkerController controller = fxmlLoader.getController();
+        ProductsController controller = fxmlLoader.getController();
         controller.setPrimaryDatabaseManager(primaryDatabaseManager);
 
         // Создаем диалоговое окно
         Dialog<Void> dialog = new Dialog<>();
-        dialog.setTitle("Управление сотрудниками");
+        dialog.setTitle("Управление товарами");
 
         dialog.getDialogPane().setContent(infoContent); // Добавляем содержимое в диалоговое окно
 
         Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
 
+
         // Обработчик закрытия окна
         stage.setOnCloseRequest(event -> {
-            System.out.println("Закрытие окна с сотрудниками...");
+            System.out.println("Закрытие окна с товарами...");
             dialog.close(); // Закрыть диалог
         });
 
-        // Показываем диалог в модальном режиме
+
         dialog.showAndWait();
     }
 
-    public void showAppointmentWindow(ActionEvent actionEvent) throws IOException {
-        // Загружаем FXML файл для окна справки
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("appointment.fxml"));
+    public void showWorkersWindow(ActionEvent actionEvent) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("workers.fxml"));
 
-        VBox infoContent = fxmlLoader.load(); // Загружаем содержимое окна справки
-
-        AppointmentController controller = fxmlLoader.getController();
+        VBox infoContent = fxmlLoader.load();
+        WorkerController controller = fxmlLoader.getController();
         controller.setPrimaryDatabaseManager(primaryDatabaseManager);
 
-        // Создаем диалоговое окно
         Dialog<Void> dialog = new Dialog<>();
-        dialog.setTitle("Управление записями");
+        dialog.setTitle("Управление сотрудниками");
 
         dialog.getDialogPane().setContent(infoContent);
 
         Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
 
-        // Обработчик закрытия окна
         stage.setOnCloseRequest(event -> {
-            System.out.println("Закрытие окна с покупателями...");
-            dialog.close();
+            System.out.println("Закрытие окна с сотрудниками...");
+            dialog.close(); // Закрыть диалог
         });
 
         dialog.showAndWait();
     }
 
-    public void onDateSelected(ActionEvent event) {
-        System.out.println("Date selected");
-        System.out.println(datePic.getValue());
+    public void showMainAdminWindow() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("main-admin.fxml.fxml"));
+
+        VBox infoContent = fxmlLoader.load();
+        WorkerController controller = fxmlLoader.getController();
+        controller.setPrimaryDatabaseManager(primaryDatabaseManager);
+
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("Управление сотрудниками");
+
+        dialog.getDialogPane().setContent(infoContent);
+
+        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
+
+        stage.setOnCloseRequest(event -> {
+            System.out.println("Закрытие окна с сотрудниками...");
+            dialog.close(); // Закрыть диалог
+        });
+
+        dialog.showAndWait();
     }
+
+    public void showMainCustomerWindow() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("main-customer.fxml"));
+        VBox infoContent = fxmlLoader.load();
+
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("Личный кабинет клиента");
+        dialog.getDialogPane().setContent(infoContent);
+        Stage stageLogin = (Stage) dialog.getDialogPane().getScene().getWindow();
+        stageLogin.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
+
+        stageLogin.setOnCloseRequest(event -> {
+            System.out.println("Закрываем личный кабинет");
+            dialog.close(); // Закрыть диалог
+        });
+
+        dialog.showAndWait();
+    }
+
+
 }

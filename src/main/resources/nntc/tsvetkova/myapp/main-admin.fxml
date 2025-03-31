@@ -23,7 +23,6 @@
             <items>
                <MenuItem accelerator="Ctrl+P" mnemonicParsing="true" onAction="#showLoginWindow" text="_Подключение к СУБД" />
                <MenuItem accelerator="Ctrl+I" mnemonicParsing="true" onAction="#showinfoWindow" text="_Справка" />
-               <MenuItem accelerator="Ctrl+K" mnemonicParsing="true" onAction="#handleMenuClose" text="_Закрыть" />
             </items>
          </Menu>
       </menus>
@@ -35,7 +34,7 @@
    </Label>
    <AnchorPane prefHeight="284.0" prefWidth="564.0">
       <children>
-         <TableView layoutX="205.0" prefHeight="207.0" prefWidth="358.0">
+         <TableView  fx:id="tableView" layoutX="205.0" prefHeight="207.0" prefWidth="358.0">
            <columns>
              <TableColumn prefWidth="110.4000244140625" text="Услуга" />
              <TableColumn prefWidth="73.5999755859375" text="Мастер" />
@@ -43,7 +42,7 @@
                <TableColumn prefWidth="79.19998168945312" text="Время" />
            </columns>
          </TableView>
-         <Button layoutX="14.0" mnemonicParsing="false" onAction="#showAppointmentWindow" prefHeight="94.0" prefWidth="174.0" text="Новая запись">
+         <Button layoutX="14.0" mnemonicParsing="false" onAction="#showOrderWindow" prefHeight="94.0" prefWidth="174.0" text="Новая запись">
             <font>
                <Font name="Noto Serif Condensed" size="20.0" />
             </font>
@@ -64,12 +63,12 @@
                <Font name="Noto Serif Condensed" size="20.0" />
             </font>
          </Button>
-         <Button layoutX="205.0" layoutY="217.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="94.0" text="Изменить">
+         <Button layoutX="205.0" layoutY="217.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="94.0" fx:id="btnEdit" text="Изменить">
             <font>
                <Font name="Noto Serif Condensed" size="10.0" />
             </font>
          </Button>
-         <Button layoutX="468.0" layoutY="217.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="94.0" text="Удалить" textFill="#e41616">
+         <Button layoutX="468.0" layoutY="217.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="94.0" fx:id="btnDelete" text="Удалить" textFill="#e41616">
             <font>
                <Font name="Noto Serif Condensed" size="10.0" />
             </font>

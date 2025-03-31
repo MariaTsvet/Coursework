@@ -15,7 +15,6 @@ import java.util.prefs.Preferences;
 
 public class DesktopApplication extends Application {
 
-    // ограничения размеров окна по умолчанию
     private static final double MIN_WIDTH = 450.0;
     private static final double MIN_HEIGHT = 350.0;
 
@@ -25,11 +24,10 @@ public class DesktopApplication extends Application {
         DatabaseManager dbManager = new DatabaseManager();
 
         try {
-            showMainWindow(stage, dbManager);
+            showAuthWindow(stage, dbManager);
         } catch (Exception e) {
 
             System.out.println(e.getMessage());
-
             showLoginWindow();
         }
 
@@ -53,17 +51,22 @@ public class DesktopApplication extends Application {
         dialog.showAndWait();
     }
 
-    private void showMainWindow(Stage stage, DatabaseManager dbManager) throws IOException, SQLException {
-
+    private void showAuthWindow(Stage stage, DatabaseManager dbManager) throws IOException, SQLException {
+        System.out.println("Открываю главное окно");
         dbManager.connect();
         dbManager.ensureTablesExists();
 
-        FXMLLoader fxmlLoader = new FXMLLoader(DesktopApplication.class.getResource("main-admin.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 340, 280);
-
+        FXMLLoader fxmlLoader = new FXMLLoader(DesktopApplication.class.getResource("authentication-view.fxml"));
+        Scene scene;
+        try {
+            scene = new Scene(fxmlLoader.load(), 340, 280);
+        } catch (IOException e) {
+            System.err.println("Ошибка загрузки FXML: " + e.getMessage());
+            throw e; // или обработайте исключение по-другому
+        }
 
         // Получаем контроллер и передаем Stage
-        DesktopController controller = fxmlLoader.getController();
+        AuthController controller = fxmlLoader.getController();
         controller.setPrimaryStage(stage);
 
         controller.setPrimaryDatabaseManager(dbManager);

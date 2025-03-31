@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="649.0" prefWidth="1239.0" spacing="20.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nntc.tsvetkova.myapp.OrderController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+    <HBox alignment="CENTER" prefHeight="43.0" prefWidth="833.0" spacing="10.0" VBox.vgrow="NEVER">
+        <children>
+         <Label layoutX="10.0" layoutY="15.0" text="Заказ №:">
+            <font>
+               <Font size="22.0" />
+            </font></Label>
+         <Label fx:id="orderId" layoutX="10.0" layoutY="15.0" text="777" textFill="#e80909">
+            <font>
+               <Font name="Monospaced Bold" size="22.0" />
+            </font></Label>
+            <Label layoutX="10.0" layoutY="15.0" text="Дата заказа:"><font>
+                <Font size="22.0" />
+            </font></Label>
+            <Label fx:id="orderDate" layoutX="104.0" layoutY="15.0" text="28.02.2025 08:55" textFill="#e80909">
+                <font>
+                    <Font name="Monospaced Bold" size="22.0" />
+                </font>
+            </Label>
+        </children>
+    </HBox>
+   <Separator prefWidth="200.0" />
+    <HBox alignment="CENTER" prefHeight="0.0" prefWidth="833.0" spacing="10.0" VBox.vgrow="NEVER">
+        <children>
+            <Label text="Клиент">
+            <font>
+               <Font size="22.0" />
+            </font></Label>
+            <ComboBox fx:id="customersList" onAction="#onCustomerChanged" />
+         <Label text="Мастер">
+            <font>
+               <Font size="22.0" />
+            </font>
+         </Label>
+         <ComboBox fx:id="workersList" onAction="#onWorkerChanged" />
+        </children>
+    </HBox>
+   <Separator layoutX="30.0" layoutY="93.0" prefWidth="200.0" />
+   <VBox prefHeight="200.0" prefWidth="100.0">
+      <children>
+         <AnchorPane prefHeight="200.0" prefWidth="200.0">
+            <children>
+               <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <children>
+                     <Label alignment="CENTER" text="Доступные услуги:">
+                        <font>
+                           <Font size="22.0" />
+                        </font>
+                     </Label>
+                      <TableView fx:id="tableAvailable" onMouseClicked="#onProductClicked" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                          <columns>
+                              <TableColumn fx:id="idColumnAvailable" text="ID" />
+                              <TableColumn fx:id="nameColumnAvailable" prefWidth="209.0" text="Услуга" />
+                              <TableColumn fx:id="priceColumnAvailable" minWidth="0.0" prefWidth="153.0" text="Цена" />
+                          </columns>
+                      </TableView>
+                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50">
+                        <children>
+                           <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#removeProductFromOrder" text="убрать " textFill="#dd0b0b">
+                              <font>
+                                 <Font size="16.0" />
+                              </font>
+                           </Button>
+                           <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addProductToOrder" text="добавить " textAlignment="CENTER" textFill="#099440">
+                              <font>
+                                 <Font size="16.0" />
+                              </font>
+                           </Button>
+                        </children>
+                     </HBox>
+                  </children>
+               </VBox>
+            </children>
+         </AnchorPane>
+      </children>
+   </VBox>
+   <AnchorPane prefHeight="200.0" prefWidth="200.0">
+      <children>
+         <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+               <Label alignment="CENTER" text="Услуги в заказе:">
+                  <font>
+                     <Font size="22.0" />
+                  </font>
+               </Label>
+                <TableView fx:id="tableSelected" onMouseClicked="#onProductInOrderClicked" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="idColumnSelected" text="ID" />
+                        <TableColumn fx:id="nameColumnSelected" prefWidth="208.0000457763672" text="Услуга" />
+                        <TableColumn fx:id="priceColumnSelected" prefWidth="158.39996337890625" text="Цена" />
+                    </columns>
+                </TableView>
+            </children>
+         </VBox>
+      </children>
+   </AnchorPane>
+   <!--<Separator layoutX="30.0" layoutY="246.0" prefWidth="200.0" />
+   <HBox alignment="CENTER" prefHeight="40.0">
+      <children>
+         <Button mnemonicParsing="false" onAction="#save" text="Сохранить" textFill="#10ae4d">
+            <font>
+               <Font size="18.0" />
+            </font>
+         </Button>
+      </children>
+   </HBox>-->
+</VBox>
