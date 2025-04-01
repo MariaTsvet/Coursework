@@ -3,13 +3,13 @@ package nntc.tsvetkova.myapp;
 public class Service {
     private int id;
     private String name;
-    private String email;
+    private float price;
 
 
-    public Service(int id, String name, String email) {
+    public Service(int id, String name, float price) {
         this.id = id;
         this.name = name;
-        this.email = email;
+        this.price = price;
     }
 
     public int getId() {
@@ -20,7 +20,7 @@ public class Service {
         return name;
     }
 
-    public String getEmail() {
-        return email;
+    public float getPrice() {
+        return price;
     }
 }

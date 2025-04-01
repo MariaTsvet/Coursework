@@ -164,6 +164,34 @@ public class DesktopController {
         dialog.showAndWait();
     }
 
+    public void showServiceWindow(ActionEvent actionEvent) throws IOException {
+
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("services-view.fxml"));
+
+        VBox infoContent = fxmlLoader.load(); // Загружаем содержимое окна справки
+
+        ServiceController controller = fxmlLoader.getController();
+        controller.setPrimaryDatabaseManager(primaryDatabaseManager);
+
+        // Создаем диалоговое окно
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("Управление услугами");
+
+        dialog.getDialogPane().setContent(infoContent); // Добавляем содержимое в диалоговое окно
+
+        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
+
+        // Обработчик закрытия окна
+        stage.setOnCloseRequest(event -> {
+            System.out.println("Закрытие окна с услугами...");
+            dialog.close(); // Закрыть диалог
+        });
+
+        // Показываем диалог в модальном режиме
+        dialog.showAndWait();
+    }
+
     public void showProductsWindow(ActionEvent actionEvent) throws IOException {
         // Загружаем FXML файл для окна справки
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("products-view.fxml"));
@@ -217,14 +245,14 @@ public class DesktopController {
     }
 
     public void showMainAdminWindow() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("main-admin.fxml.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("main-admin.fxml"));
 
         VBox infoContent = fxmlLoader.load();
-        WorkerController controller = fxmlLoader.getController();
+        MainAdminController controller = fxmlLoader.getController();
         controller.setPrimaryDatabaseManager(primaryDatabaseManager);
 
         Dialog<Void> dialog = new Dialog<>();
-        dialog.setTitle("Управление сотрудниками");
+        dialog.setTitle("Главное окно администратора");
 
         dialog.getDialogPane().setContent(infoContent);
 
@@ -232,7 +260,7 @@ public class DesktopController {
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
 
         stage.setOnCloseRequest(event -> {
-            System.out.println("Закрытие окна с сотрудниками...");
+            System.out.println("Закрытие окна администратора");
             dialog.close(); // Закрыть диалог
         });
 

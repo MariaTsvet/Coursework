@@ -30,7 +30,6 @@ public class DesktopApplication extends Application {
             System.out.println(e.getMessage());
             showLoginWindow();
         }
-
     }
 
     private void showLoginWindow() throws IOException {
@@ -62,31 +61,25 @@ public class DesktopApplication extends Application {
             scene = new Scene(fxmlLoader.load(), 340, 280);
         } catch (IOException e) {
             System.err.println("Ошибка загрузки FXML: " + e.getMessage());
-            throw e; // или обработайте исключение по-другому
+            throw e;
         }
 
-        // Получаем контроллер и передаем Stage
         AuthController controller = fxmlLoader.getController();
         controller.setPrimaryStage(stage);
+        controller.setDatabaseManager(dbManager);
 
-        controller.setPrimaryDatabaseManager(dbManager);
-
-        // Получаем настройки
         Preferences prefs = Preferences.userNodeForPackage(DesktopApplication.class);
 
-        // Загружаем сохраненные параметры окна
         double x = prefs.getDouble("windowX", 100); // Значение по умолчанию - 100
         double y = prefs.getDouble("windowY", 100);
         double width = prefs.getDouble("windowWidth", 600);
         double height = prefs.getDouble("windowHeight", 400);
 
-        // Устанавливаем размеры и положение окна
         stage.setX(x);
         stage.setY(y);
         stage.setWidth(width);
         stage.setHeight(height);
 
-        // Устанавливаем минимальный размер окна
         stage.setMinWidth(MIN_WIDTH);
         stage.setMinHeight(MIN_HEIGHT);
 

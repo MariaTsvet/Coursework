@@ -46,6 +46,10 @@ public class MainAdminController {
 
     private DatabaseManager primaryDatabaseManager;
 
+    public void setPrimaryDatabaseManager(DatabaseManager dm) {
+        this.primaryDatabaseManager = dm;
+    }
+
     public MainAdminController(DatabaseManager databaseManager) {
         this.primaryDatabaseManager = databaseManager;
     }

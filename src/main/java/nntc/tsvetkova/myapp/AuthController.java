@@ -13,6 +13,12 @@ import java.util.prefs.Preferences;
 
 public class AuthController {
 
+    private Stage primaryStage;
+
+    public void setPrimaryStage(Stage stage) {
+        this.primaryStage = stage;
+    }
+
     @FXML
     private TextField loginNameField;
     @FXML
@@ -34,17 +40,6 @@ public class AuthController {
     private DatabaseManager databaseManager;
     private DesktopController desktopController;
 
-    private Stage primaryStage;
-    private DatabaseManager primaryDatabaseManager;
-
-    public void setPrimaryStage(Stage stage) {
-        this.primaryStage = stage;
-    }
-
-    public void setPrimaryDatabaseManager(DatabaseManager dm) {
-        this.primaryDatabaseManager = dm;
-    }
-
     public void setDatabaseManager(DatabaseManager dm) {
         this.databaseManager = dm;
     }
@@ -53,25 +48,21 @@ public class AuthController {
         this.desktopController = dc;
     }
 
+    @FXML
     public void handleMenuClose(ActionEvent event) {
 
         System.out.println("Метод handleMenuClose вызван.");
 
-        // Проверяем, инициализирован ли Stage
         if (primaryStage != null) {
             boolean shouldClose = showCloseConfirmationDialog();
             if (shouldClose) {
                 System.out.println("Пользователь подтвердил закрытие. Окно будет закрыто.");
-                // Получаем настройки
+
                 Preferences prefs = Preferences.userNodeForPackage(DesktopApplication.class);
                 prefs.putDouble("windowX", primaryStage.getX());
                 prefs.putDouble("windowY", primaryStage.getY());
                 prefs.putDouble("windowWidth", primaryStage.getWidth());
                 prefs.putDouble("windowHeight", primaryStage.getHeight());
-
-                if (primaryDatabaseManager != null) {
-                    this.primaryDatabaseManager.disconnect();
-                }
 
                 primaryStage.close(); // Закрытие окна
             } else {
@@ -81,6 +72,7 @@ public class AuthController {
             System.err.println("Stage не был установлен!");
         }
     }
+
 
     private boolean showCloseConfirmationDialog() {
         // Создаем диалог подтверждения
@@ -100,15 +92,29 @@ public class AuthController {
 
     @FXML
     private void handleLogin() throws IOException {
+        if (databaseManager == null) {
+            System.err.println("Ошибка: databaseManager не инициализирован.");
+            return;
+        }
         String name = loginNameField.getText().trim();
-        String password = loginPasswordField.getText().trim();
         String email = loginEmailField.getText().trim();
+        String password = loginPasswordField.getText().trim();
         String role = loginRoleComboBox.getValue();
 
-        User authenticatedUser = databaseManager.authenticateCustomer(name, email, password, role);
+        if (name.isEmpty() || password.isEmpty() || email.isEmpty() || role == null) {
+            showAlert("Ошибка", "Все поля должны быть заполнены.");
+            return;
+        }
+        try {
+        User authenticatedUser = databaseManager.authenticateUser(name, email, password, role);
 
         if (authenticatedUser != null) {
-            ((Stage) loginNameField.getScene().getWindow()).close(); // Закрыть окно аутентификации
+            ((Stage) loginNameField.getScene().getWindow()).close();
+
+            if (desktopController == null) {
+                System.err.println("Ошибка: desktopController не инициализирован.");
+                return;
+            }
 
             if ("admin".equals(authenticatedUser.getRole())) {
                 desktopController.showMainAdminWindow();
@@ -117,6 +123,10 @@ public class AuthController {
             }
         } else {
             showAlert("Ошибка авторизации", "Неверные данные.");
+        }
+        } catch (Exception e) {
+            e.printStackTrace(); // Логируем ошибку для отладки
+            showAlert("Ошибка", "Произошла ошибка при авторизации.");
         }
     }
 
@@ -127,7 +137,7 @@ public class AuthController {
         String password = registerPasswordField.getText();
         String role = registerRoleComboBox.getValue();
 
-        if (name.isEmpty() | email.isEmpty() | password.isEmpty() | Objects.isNull(role)) {
+        if (name.isEmpty() || email.isEmpty() || password.isEmpty() || Objects.isNull(role)) {
             showAlert("Ошибка", "Все поля должны быть заполнены.");
             return;
         }
@@ -137,6 +147,7 @@ public class AuthController {
         if (isRegistered) {
             showAlert("Успех", "Регистрация прошла успешно! Теперь вы можете войти.");
             registerNameField.clear();
+            registerEmailField.clear();
             registerPasswordField.clear();
         } else {
             showAlert("Ошибка", "Пользователь с таким логином уже существует.");

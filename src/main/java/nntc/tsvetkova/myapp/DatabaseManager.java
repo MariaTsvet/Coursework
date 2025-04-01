@@ -90,12 +90,11 @@ CREATE TABLE IF NOT EXISTS %s.worker (
 );
 
 CREATE TABLE IF NOT EXISTS %s."user" (
-    id int GENERATED ALWAYS AS IDENTITY NOT NULL,
+    id SERIAL PRIMARY KEY,
     "name" varchar NULL,
     email varchar NOT NULL,
     password varchar NOT NULL,
     role varchar NOT NULL CHECK (role IN ('admin', 'customer')),
-    CONSTRAINT user_pk PRIMARY KEY (id),
     CONSTRAINT user_uniqueEmail UNIQUE (email),
     CONSTRAINT user_uniquePass UNIQUE (password)
 );
@@ -121,7 +120,7 @@ CREATE TABLE IF NOT EXISTS %s.order_product (
     CONSTRAINT order_product_pk PRIMARY KEY (order_id, product_id),
     CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES %s.products(id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_order FOREIGN KEY (order_id) REFERENCES %s."order"(id) ON DELETE CASCADE ON UPDATE CASCADE
-);""", SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA);
+);""", SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA, SCHEMA);
 
 
         try (Statement statement = connection.createStatement()) {
@@ -144,16 +143,16 @@ CREATE TABLE IF NOT EXISTS %s.order_product (
     }
 
 
-    public User authenticateCustomer(String name, String email, String password, String role) {
-        String query = "SELECT id FROM user WHERE username = ? AND email = ? AND password = ? AND role = ?";
+    public User authenticateUser(String name, String email, String password, String role) {
+        String query = "SELECT * FROM \"user\" WHERE \"name\" = ? AND email = ? AND password = ? AND role = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, name);
+            statement.setString(1, name); // Используем переменную name
             statement.setString(2, email);
             statement.setString(3, password);
             statement.setString(4, role);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                return new User(resultSet.getInt("id"), name, email, password, role);
+                return new User(resultSet.getInt("id"), resultSet.getString("name"), email, password, role);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -162,9 +161,10 @@ CREATE TABLE IF NOT EXISTS %s.order_product (
     }
 
 
+
     public boolean registerUser(String name, String email, String password, String role) {
-        String checkQuery = "SELECT COUNT(*) FROM user WHERE email = ?";
-        String query = "INSERT INTO user (name, email, password, role) VALUES (?, ?, ?, ?)";
+        String checkQuery = "SELECT COUNT(*) FROM \"user\" WHERE email = ?";
+        String query = "INSERT INTO \"user\" (\"name\", email, password, role) VALUES (?, ?, ?, ?)";
         try (PreparedStatement checkStatement = connection.prepareStatement(checkQuery)) {
             checkStatement.setString(1, email);
             ResultSet rs = checkStatement.executeQuery();
@@ -176,7 +176,6 @@ CREATE TABLE IF NOT EXISTS %s.order_product (
             e.printStackTrace();
             return false;
         }
-
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, name);
             statement.setString(2, email);
@@ -447,6 +446,66 @@ CREATE TABLE IF NOT EXISTS %s.order_product (
         InputStream defaultImageStream = getClass().getResourceAsStream("/noimage.jpg");
         return new Image(Objects.requireNonNull(defaultImageStream));
     }
+
+    public void serviceInsertData(String name, float price) {
+        String query = String.format("INSERT INTO %s (\"name\", price) VALUES ('%s', '%s')", SCHEMA.concat(".service"), "name", price);
+        try (var preparedStatement = connection.prepareStatement(query)) {
+            int rowsInserted = preparedStatement.executeUpdate();
+            System.out.println("Добавлено строк: " + rowsInserted);
+        } catch (SQLException e) {
+            System.out.println("Ошибка при вставке данных: " + e.getMessage());
+            // Показываем модальное окно с ошибкой
+            Platform.runLater(() -> ErrorDialog.showError("Ошибка при вставке данных: ", e.getMessage()));
+        }
+    }
+
+    public void serviceUpdateData(Integer id, String name, float price) {
+        String query = String.format("UPDATE %s SET \"name\"='%s', price=%s WHERE id=%d", SCHEMA.concat(".service"), id, "name", price);
+
+        //System.out.println("QUERY:");
+        //System.out.println(query);
+
+        try (var preparedStatement = connection.prepareStatement(query)) {
+            int rowsUpdated = preparedStatement.executeUpdate();
+            System.out.println("Обновлено строк: " + rowsUpdated);
+        } catch (SQLException e) {
+            System.out.println("Ошибка при изменении данных: " + e.getMessage());
+            // Показываем модальное окно с ошибкой
+            Platform.runLater(() -> ErrorDialog.showError("Ошибка при изменении данных: ", e.getMessage()));
+        }
+    }
+
+    public void serviceDeleteData(int id) {
+        String query = String.format("DELETE FROM %s WHERE id=%d", SCHEMA.concat(".service"), id);
+
+        try (var preparedStatement = connection.prepareStatement(query)) {
+            int rowsDeleted = preparedStatement.executeUpdate();
+            System.out.println("Удалено строк: " + rowsDeleted);
+        } catch (SQLException e) {
+            System.out.println("Ошибка при удалении данных: " + e.getMessage());
+            // Показываем модальное окно с ошибкой
+            Platform.runLater(() -> ErrorDialog.showError("Ошибка при удалении данных: ", e.getMessage()));
+        }
+    }
+
+    public ObservableList<Service> serviceFetchData() {
+
+        ObservableList<Service> re = FXCollections.observableArrayList();
+        String query = String.format("SELECT id, \"name\", email FROM %s", SCHEMA.concat(".service"));
+        try (var preparedStatement = connection.prepareStatement(query);
+             var resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                re.add(new Service(resultSet.getInt("id"), resultSet.getString("name"),
+                        resultSet.getFloat("price")));
+            }
+        } catch (SQLException e) {
+            System.out.println("Ошибка при выполнении запроса: " + e.getMessage());
+            // Показываем модальное окно с ошибкой
+            Platform.runLater(() -> ErrorDialog.showError("Ошибка при выполнении запроса: ", e.getMessage()));
+        }
+        return re;
+    }
+
 
     public ObservableList<Order> orderFetchData() {
 
